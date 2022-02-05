@@ -3,7 +3,6 @@ import { playlistState } from '../atoms/playlistAtom';
 import Song from '../components/Song';
 
 function Songs() {
-
     const playlist = useRecoilValue(playlistState)
 
     return (

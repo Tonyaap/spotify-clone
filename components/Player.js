@@ -26,6 +26,9 @@ function Player() {
     useRecoilState(currentTrackIdState)
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState)
   const [volume, setVolume] = useState(50)
+  const [positionMs, setPositionMs] = useState(0)
+
+  console.log(positionMs, 'posms')
 
   const songInfo = useSongInfo()
   const fetchCurrentSong = () => {
@@ -53,6 +56,18 @@ function Player() {
     })
   }
 
+  const nextSong = () => {
+    spotifyApi.skipToNext().then(
+      function () {
+        console.log('Skip to next')
+      },
+      function (err) {
+        //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+        console.log('Something went wrong!', err)
+      }
+    )
+  }
+
   useEffect(() => {
     if (spotifyApi.getAccessToken() && !currentTrackId) {
       fetchCurrentSong()
@@ -61,17 +76,29 @@ function Player() {
   }, [currentTrackId, spotifyApi, session])
 
   useEffect(() => {
-    if(volume > 0 && volume < 100) {
-        debouncedAdjustVolume(volume)
+    if (volume > 0 && volume < 100) {
+      debouncedAdjustVolume(volume)
     }
-  },[volume])
+  }, [volume])
 
   const debouncedAdjustVolume = useCallback(
-      debounce((volume) => {
-          spotifyApi.setVolume(volume).catch((err) => {});
-      }, 500),
-      []
-  );
+    debounce((volume) => {
+      spotifyApi.setVolume(volume).catch((err) => {})
+    }, 500),
+    []
+  )
+
+  useEffect(() => {
+    debouncedAdjustPosition(positionMs)
+  })
+
+  const debouncedAdjustPosition = useCallback(
+    debounce((positionMs) => {
+      spotifyApi.seek(positionMs).catch((err) => {})
+    }, 500)
+  )
+
+  console.log(songInfo, 'info')
 
   return (
     <div className="grid h-24 grid-cols-3 bg-gradient-to-b from-black to-gray-900 px-2 text-xs text-white md:px-8 md:text-base">
@@ -88,16 +115,27 @@ function Player() {
         </div>
       </div>
       {/* Center  */}
-      <div className="flex items-center justify-evenly">
-        <SwitchHorizontalIcon className="button" />
-        <RewindIcon className="button" />
-        {isPlaying ? (
-          <PauseIcon onClick={handlePlayPause} className="button h-10 w-10" />
-        ) : (
-          <PlayIcon onClick={handlePlayPause} className="button h-10 w-10" />
-        )}
-        <FastForwardIcon className="button" />
-        <ReplyIcon className="button" />
+
+      <div>
+        <input
+          className="w-full md:w-full"
+          type="range"
+          value={positionMs}
+          onChange={(e) => setPositionMs(Number(e.target.value))}
+          min={0}
+          max={songInfo?.duration_ms}
+        />
+        <div className="flex items-center justify-evenly">
+          <SwitchHorizontalIcon className="button" />
+          <RewindIcon className="button" />
+          {isPlaying ? (
+            <PauseIcon onClick={handlePlayPause} className="button h-10 w-10" />
+          ) : (
+            <PlayIcon onClick={handlePlayPause} className="button h-10 w-10" />
+          )}
+          <FastForwardIcon onClick={nextSong} className="button" />
+          <ReplyIcon className="button" />
+        </div>
       </div>
       {/* Right Side */}
       <div className="flex items-center justify-end space-x-3 pr-5 md:space-x-4">

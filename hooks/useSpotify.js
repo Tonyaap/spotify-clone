@@ -20,7 +20,6 @@ function useSpotify() {
             spotifyApi.setAccessToken(session.user.accessToken)
         }
     }, [session]);
-
     return spotifyApi;
 }
 
