@@ -5,11 +5,11 @@ import {currentTrackIdState, isPlayingState} from '../atoms/songAtom'
 
 function Song({ order, track }) {
   const spotifyApi = useSpotify();
-  const [currentTrackId, setCurrentTrackid] = useRecoilState(currentTrackIdState);
+  const [currentTrackId, setCurrentTrackId] = useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 
   const playSong = () => {
-    setCurrentTrackid(track.track.id)
+    setCurrentTrackId(track.track.id)
     setIsPlaying(true)
     spotifyApi.play({
         uris: [track.track.uri],
