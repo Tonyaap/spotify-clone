@@ -18,8 +18,6 @@ function Sidebar() {
   const [playLists, setPlaylists] = useState([])
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState)
 
-  console.log('you picked playlist>>>', playlistId)
-
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getUserPlaylists().then((data) => {
@@ -29,7 +27,7 @@ function Sidebar() {
   }, [session, spotifyApi])
 
   const hipHop = playLists.find(element => element.name === "Guess The Song - HipHop");
-  const classicRock = playLists.find(element => element.name === "Guess The Song - HipHop");
+  const classicRock = playLists.find(element => element.name === "Guess The Song - Classic Rock");
 
   const guessList = [
     hipHop,
