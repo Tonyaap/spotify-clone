@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { currentTrackIdState, isPlayingState, positionMsState } from '../atoms/songAtom'
 import { debounce } from 'lodash'
 import useSpotify from '../hooks/useSpotify'
 import useSongInfo from '../hooks/useSongInfo'
+import { playlistState } from '../atoms/playlistAtom';
 import {
   HeartIcon,
   VolumeUpIcon as VolumeDownIcon,
@@ -27,6 +28,7 @@ function Player() {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState)
   const [volume, setVolume] = useState(50)
   const [positionMs, setPositionMs] = useRecoilState(positionMsState)
+  const playlist = useRecoilValue(playlistState)
 
   const songInfo = useSongInfo()
 
@@ -55,7 +57,14 @@ function Player() {
   }
 
   const nextSong = () => {
-    spotifyApi.skipToNext()
+    let randomNumber = Math.floor(Math.random() * playlist?.tracks?.items?.length);
+    setCurrentTrackId(playlist?.tracks?.items[randomNumber].track.id)
+    fetchCurrentSong();
+    setPositionMs(0)
+    setIsPlaying(true)
+    spotifyApi.play({
+      uris: [playlist?.tracks?.items[randomNumber].track.uri],
+  });
   }
 
   useEffect(() => {

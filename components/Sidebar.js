@@ -28,6 +28,14 @@ function Sidebar() {
     }
   }, [session, spotifyApi])
 
+  const hipHop = playLists.find(element => element.name === "Guess The Song - HipHop");
+  const classicRock = playLists.find(element => element.name === "Guess The Song - HipHop");
+
+  const guessList = [
+    hipHop,
+    classicRock
+  ]
+
   return (
     <div
       className="
@@ -64,13 +72,13 @@ function Sidebar() {
         <hr className="border-t-[0.1px] border-gray-900" />
 
         {/* Playlists  */}
-        {playLists.map((playlist) => (
+        {guessList.map((playlist) => (
           <p
-            key={playlist.id}
-            onClick={() => setPlaylistId(playlist.id)}
+            key={playlist?.id}
+            onClick={() => setPlaylistId(playlist?.id)}
             className="cursor-pointer hover:text-white"
           >
-            {playlist.name}
+            {playlist?.name}
           </p>
         ))}
       </div>
