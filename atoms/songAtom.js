@@ -14,3 +14,8 @@ export const positionMsState = atom({
     key: "positionMsState",
     default: 0
 })
+
+export const orderInPlaylistState = atom({
+    key: 'orderInPlaylistState',
+    default: 0,
+})
