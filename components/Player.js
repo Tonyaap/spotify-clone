@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRecoilState } from 'recoil'
-import { currentTrackIdState, isPlayingState, positionMsState } from '../atoms/songAtom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { currentTrackIdState, isPlayingState, positionMsState, orderInPlaylistState } from '../atoms/songAtom'
+import {playlistState} from '../atoms/playlistAtom'
 import { debounce } from 'lodash'
 import useSpotify from '../hooks/useSpotify'
 import useSongInfo from '../hooks/useSongInfo'
@@ -27,6 +28,8 @@ function Player() {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState)
   const [volume, setVolume] = useState(50)
   const [positionMs, setPositionMs] = useRecoilState(positionMsState)
+  const [orderInPlaylist, setOrderInPlaylist] = useRecoilState(orderInPlaylistState)
+  const playlist = useRecoilValue(playlistState)
 
   const songInfo = useSongInfo()
 
@@ -55,8 +58,16 @@ function Player() {
   }
 
   const nextSong = () => {
-    spotifyApi.skipToNext()
+    setCurrentTrackId(playlist?.tracks?.items[orderInPlaylist + 1].track.id)
+    fetchCurrentSong();
+    setPositionMs(0)
+    setIsPlaying(true)
+    spotifyApi.play({
+      uris: [playlist?.tracks?.items[orderInPlaylist + 1].track.uri],
+  });
+    setOrderInPlaylist(orderInPlaylist + 1)
   }
+
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && !currentTrackId) {
