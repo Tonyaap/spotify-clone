@@ -32,7 +32,7 @@ function Sidebar() {
     <div
       className="
     sm:max-w[12rem] hidden h-screen overflow-y-scroll border-r border-gray-900
-    p-5 pb-36 text-xs text-gray-500 scrollbar-hide md:inline-flex lg:max-w-[15rem] lg:text-sm"
+    p-5 text-xs text-gray-500 scrollbar-hide md:inline-flex lg:max-w-[15rem] lg:text-sm"
     >
       <div className="space-y-4">
         <button className="flex items-center space-x-2 hover:text-white">

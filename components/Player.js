@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRecoilState } from 'recoil'
-import { currentTrackIdState, isPlayingState } from '../atoms/songAtom'
+import { currentTrackIdState, isPlayingState, positionMsState } from '../atoms/songAtom'
 import { debounce } from 'lodash'
 import useSpotify from '../hooks/useSpotify'
 import useSongInfo from '../hooks/useSongInfo'
@@ -26,15 +26,13 @@ function Player() {
     useRecoilState(currentTrackIdState)
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState)
   const [volume, setVolume] = useState(50)
-  const [positionMs, setPositionMs] = useState(0)
-
-  console.log(positionMs, 'posms')
+  const [positionMs, setPositionMs] = useRecoilState(positionMsState)
 
   const songInfo = useSongInfo()
+
   const fetchCurrentSong = () => {
     if (!songInfo) {
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        console.log('Now Playing: ', data?.body?.item)
         setCurrentTrackId(data.body?.item?.id)
 
         spotifyApi.getMyCurrentPlaybackState().then((data) => {
@@ -57,15 +55,7 @@ function Player() {
   }
 
   const nextSong = () => {
-    spotifyApi.skipToNext().then(
-      function () {
-        console.log('Skip to next')
-      },
-      function (err) {
-        //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-        console.log('Something went wrong!', err)
-      }
-    )
+    spotifyApi.skipToNext()
   }
 
   useEffect(() => {
@@ -98,10 +88,15 @@ function Player() {
     }, 500)
   )
 
-  console.log(songInfo, 'info')
+  spotifyApi.getMyCurrentPlayingTrack()
+  .then(function(data) {
+    console.log('Now playing: ' + data.body.item.name);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
 
   return (
-    <div className="grid h-24 grid-cols-3 bg-gradient-to-b from-black to-gray-900 px-2 text-xs text-white md:px-8 md:text-base">
+    <div className="grid h-30 grid-cols-3 bg-gradient-to-b from-black to-gray-900 px-2 text-xs text-white md:px-8 md:text-base">
       {/* Left */}
       <div className="flex items-center space-x-4">
         <img
@@ -116,7 +111,7 @@ function Player() {
       </div>
       {/* Center  */}
 
-      <div>
+      <div className='mt-5 mb-5'>
         <input
           className="w-full md:w-full"
           type="range"

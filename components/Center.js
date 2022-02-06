@@ -37,8 +37,6 @@ function Center() {
     .catch((err) => console.log('something went wrong', err))
   },[spotifyApi, playlistId])
 
-
-
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
@@ -47,7 +45,7 @@ function Center() {
         >
           <img
             className="h-10 w-10 rounded-full"
-            src={session?.user.image}
+            src={session?.user?.image}
             alt=""
           ></img>
           <h2>{session?.user.name}</h2>

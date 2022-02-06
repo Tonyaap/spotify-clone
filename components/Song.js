@@ -1,15 +1,17 @@
 import { useRecoilState } from 'recoil';
 import useSpotify from '../hooks/useSpotify'
 import {millisToMinutesAndSeconds} from '../lib/time'
-import {currentTrackIdState, isPlayingState} from '../atoms/songAtom'
+import {currentTrackIdState, isPlayingState, positionMsState} from '../atoms/songAtom'
 
 function Song({ order, track }) {
   const spotifyApi = useSpotify();
   const [currentTrackId, setCurrentTrackId] = useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+  const [positionMs, setPositionMs] = useRecoilState(positionMsState)
 
   const playSong = () => {
     setCurrentTrackId(track.track.id)
+    setPositionMs(0)
     setIsPlaying(true)
     spotifyApi.play({
         uris: [track.track.uri],
@@ -22,7 +24,7 @@ function Song({ order, track }) {
     >
       <div className='flex items-center space-x-4'>
         <p>{order + 1}</p>
-        <img className='h-10 w-10' src={track.track.album.images[0].url}/>
+        <img className='h-10 w-10' src={track.track.album.images[0]?.url}/>
         <div>
             <p className='w-36 lg:w-64 truncate text-white'>{track.track.name}</p>
             <p className='w-40'>{track.track.artists[0].name}</p>
