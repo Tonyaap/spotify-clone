@@ -31,10 +31,12 @@ function Sidebar() {
 
   const hipHop = playLists.find(element => element.name === "Guess The Song - HipHop");
   const classicRock = playLists.find(element => element.name === "Guess The Song - Classic Rock");
+  const electronic = playLists.find(element => element.name === "Guess The Song - Electronic");
 
   const guessLists = [
     hipHop,
-    classicRock
+    classicRock,
+     electronic,
   ]
 
   return (
@@ -46,7 +48,7 @@ function Sidebar() {
       <div className="space-y-4">
         <button className="flex items-center space-x-2 hover:text-white">
           <MusicNoteIcon className="h-5 w-5" />
-          <p>Intro guessr</p>
+          <p>Reverse Shazam</p>
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
 
