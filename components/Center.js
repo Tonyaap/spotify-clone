@@ -1,9 +1,10 @@
-import { ChevronDownIcon } from '@heroicons/react/outline'
+import { MinusIcon } from '@heroicons/react/outline'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useState, useRef } from 'react'
 import { shuffle } from 'lodash'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { playlistIdState, playlistState, correctState, titleState } from '../atoms/playlistAtom'
+import {scoreState} from '../atoms/gameAtom'
 import useSpotify from '../hooks/useSpotify'
 import Songs from '../components/Songs'
 import Player from './Player'
@@ -24,6 +25,7 @@ function Center() {
   const [color, setColor] = useState(null)
   const playlistId = useRecoilValue(playlistIdState)
   const [playlist, setPlaylist] = useRecoilState(playlistState)
+  const [score, setScore] = useRecoilState(scoreState)
 
 
   useEffect(() => {
@@ -61,7 +63,8 @@ function Center() {
             alt=""
           ></img>
           <h2>{session?.user.name}</h2>
-          <ChevronDownIcon className="h5 w-5" />
+          <MinusIcon className="h5 w-5" />
+          <p className='pr-5'> Score: {score} </p>
         </div>
       </header>
       <section

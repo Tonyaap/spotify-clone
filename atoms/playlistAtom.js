@@ -14,8 +14,3 @@ export const correctState = atom({
     key: 'correctState',
     default: false,
 })
-
-export const titleState = atom({
-    key: "titleState",
-    default: ""
-})
