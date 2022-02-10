@@ -1,11 +1,12 @@
 import { ChevronDownIcon } from '@heroicons/react/outline'
 import { useSession, signOut } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { shuffle } from 'lodash'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { playlistIdState, playlistState } from '../atoms/playlistAtom'
+import { playlistIdState, playlistState, correctState, titleState } from '../atoms/playlistAtom'
 import useSpotify from '../hooks/useSpotify'
 import Songs from '../components/Songs'
+import Player from './Player'
 
 const colors = [
   'from-indigo-500',
@@ -24,6 +25,7 @@ function Center() {
   const playlistId = useRecoilValue(playlistIdState)
   const [playlist, setPlaylist] = useRecoilState(playlistState)
 
+
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, [playlistId])
@@ -36,6 +38,16 @@ function Center() {
     })
     .catch((err) => console.log('something went wrong', err))
   },[spotifyApi, playlistId])
+
+
+  spotifyApi.getMyCurrentPlayingTrack()
+  .then(function(data) {
+    console.log('now playing:', data.body.item.name)
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
+
+
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -62,7 +74,8 @@ function Center() {
         </div>
       </section>
       <div>
-        <Songs />
+        <Songs/>
+        <Player />
       </div>
     </div>
   )
