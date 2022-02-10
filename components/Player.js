@@ -131,7 +131,7 @@ function Player() {
   return (
     <div>
       <section className='flex items-center justify-center'>
-      <input ref={guessInput} className="input-name m-5" type="text" name="guess" onChange={inputChange}></input>
+      <input ref={guessInput} className="input-name m-5 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2" type="text" name="guess" onChange={inputChange}></input>
       </section>
       <div>
       {correct && <h1 className='text-white'>Correct!</h1>}
